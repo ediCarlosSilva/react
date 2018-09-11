@@ -1,8 +1,27 @@
 import React, { Component } from 'react';
 import './css/pure-min.css';
 import './css/side-menu.css';
+import $ from 'jquery';
 
 class App extends Component {
+
+  constructor() {
+    super();
+    this.state = {lista: []};
+  }
+
+  componentDidMount() {
+    console.log('DidMount');
+    $.ajax({
+      url:"http://localhost:8080/api/autores",
+      datatype: 'json',
+      success: function(resposta) {
+        console.log('Chegou a resposta.');
+        this.setState({lista: resposta});
+      }.bind(this)
+    })
+  }
+
   render() {
     return (
 
@@ -60,10 +79,16 @@ class App extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Edi Carlos</td>
-                    <td>edi_csilva@hotmail.com</td>
-                  </tr>
+                  {
+                    this.state.lista.map(autor => {
+                      return (
+                        <tr key={autor.id}>
+                          <td>{autor.nome}</td>
+                          <td>{autor.email}</td>
+                        </tr>
+                      )
+                    })
+                  }
                 </tbody>
               </table>
             </div>
